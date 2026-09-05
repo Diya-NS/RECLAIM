@@ -1,0 +1,277 @@
+.check-page {
+  min-height: 100vh;
+  background: #f4f5f7;
+  color: #171717;
+}
+
+.check-container {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 48px 24px 36px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Status & Animation Area */
+
+.security-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 0 32px;
+}
+
+.animation-container {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+/* Subtle Pulse Waves */
+
+.pulse-ring {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(23, 23, 23, 0.08);
+  animation: pulseRadar 2s ease-out infinite;
+}
+
+.pulse-ring-second {
+  position: absolute;
+  top: -14px;
+  left: -14px;
+  right: -14px;
+  bottom: -14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(23, 23, 23, 0.04);
+  animation: pulseRadar 2s ease-out infinite 0.7s;
+}
+
+/* Circular Spinner Arc */
+
+.spinner-arc {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #171717;
+  animation: spinSmooth 1.3s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+/* Central Icon Badge */
+
+.status-icon-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #171717;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  transition: all 0.35s ease;
+  z-index: 1;
+}
+
+.status-icon-circle.complete {
+  background: #15803d;
+  animation: popScale 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.check-mark {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Text Content */
+
+.check-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  color: #171717;
+  margin-bottom: 8px;
+}
+
+.check-subtitle {
+  font-size: 13px;
+  line-height: 1.45;
+  color: #777777;
+  max-width: 300px;
+}
+
+/* Transaction Details Card */
+
+.transaction-check-card {
+  margin-top: 12px;
+  background: #fafafa;
+  border: 1px solid #eeeeee;
+  border-radius: 20px;
+  padding: 20px 22px;
+}
+
+.detail-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #888888;
+  margin-bottom: 4px;
+}
+
+.detail-amount {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  color: #171717;
+}
+
+.detail-name {
+  font-size: 15px;
+  font-weight: 650;
+  color: #171717;
+}
+
+.detail-account {
+  font-family: monospace;
+  font-size: 12px;
+  color: #666666;
+  margin-top: 3px;
+}
+
+.detail-from {
+  font-size: 15px;
+  font-weight: 650;
+  color: #171717;
+}
+
+.card-divider {
+  height: 1px;
+  background: #eeeeee;
+  margin: 16px 0;
+}
+
+/* Spacer */
+
+.check-spacer {
+  flex: 1;
+  min-height: 40px;
+}
+
+/* Bottom Action */
+
+.check-bottom-area {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.continue-button {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 16px;
+  background: #171717;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.continue-button:hover {
+  opacity: 0.92;
+}
+
+.security-badge-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 0 4px;
+  color: #999999;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Animations */
+
+@keyframes pulseRadar {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+
+@keyframes spinSmooth {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes popScale {
+  0% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading Fallback */
+
+.check-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  font-size: 13px;
+  color: #888888;
+}
+
+@media (max-width: 360px) {
+  .check-container {
+    padding: 36px 16px 24px;
+  }
+}
