@@ -1,0 +1,384 @@
+.review-page {
+  min-height: 100vh;
+  background: #f4f5f7;
+  color: #171717;
+}
+
+.review-container {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding-bottom: 140px;
+  background: #ffffff;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.review-header h1 {
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.3px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f1f1f1;
+  font-size: 20px;
+  text-decoration: none;
+  color: #171717;
+}
+
+.header-spacer {
+  width: 38px;
+}
+
+/* Hero Amount */
+
+.amount-hero {
+  text-align: center;
+  padding: 16px 20px 22px;
+}
+
+.amount-hero-label {
+  font-size: 12px;
+  color: #777777;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.amount-hero-value {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -1.2px;
+  color: #171717;
+}
+
+.amount-hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: #eef7f0;
+  color: #147a38;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Review Cards */
+
+.review-section {
+  padding: 0 20px 16px;
+}
+
+.details-card {
+  border: 1px solid #eeeeee;
+  border-radius: 18px;
+  background: #fafafa;
+  overflow: hidden;
+}
+
+.card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+}
+
+.card-row:last-child {
+  border-bottom: none;
+}
+
+.row-label {
+  color: #777777;
+  font-size: 12px;
+}
+
+.row-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #171717;
+  text-align: right;
+}
+
+.recipient-cluster {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recipient-avatar-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #171717;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.account-badge {
+  font-family: monospace;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #555555;
+}
+
+.funds-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: #e6e8eb;
+  color: #171717;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Balance Breakdown Card */
+
+.balance-breakdown-card {
+  border: 1px solid #eeeeee;
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 16px;
+}
+
+.breakdown-title {
+  font-size: 12px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888888;
+  margin-bottom: 12px;
+}
+
+.breakdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+  color: #666666;
+}
+
+.breakdown-row.deduction {
+  color: #c93b2b;
+}
+
+.breakdown-divider {
+  height: 1px;
+  background: #eeeeee;
+  margin: 8px 0;
+}
+
+.breakdown-row.highlight {
+  font-weight: 650;
+  color: #171717;
+  font-size: 14px;
+}
+
+/* Protected Reserve Card */
+
+.protected-reserve-card {
+  border-radius: 18px;
+  background: #171717;
+  color: #ffffff;
+  padding: 18px 16px;
+}
+
+.protected-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.protected-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.protected-icon {
+  font-size: 14px;
+}
+
+.protected-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #bbbbbb;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.protected-status-badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 10px;
+  font-weight: 600;
+  color: #38d374;
+}
+
+.protected-amount {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  color: #ffffff;
+}
+
+.protected-guarantee {
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #aaaaaa;
+}
+
+.protected-guarantee strong {
+  color: #ffffff;
+}
+
+/* Security Notice Box */
+
+.security-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 4px 20px 0;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+}
+
+.security-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.security-message-title {
+  font-size: 13px;
+  font-weight: 650;
+  color: #171717;
+  line-height: 1.35;
+}
+
+.security-message-sub {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #777777;
+  line-height: 1.4;
+}
+
+
+/* Bottom Action Bar */
+
+.review-bottom-action {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  z-index: 10;
+  width: 100%;
+  max-width: 430px;
+  padding: 12px 20px 20px;
+  transform: translateX(-50%);
+  border-top: 1px solid #eeeeee;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.confirm-button {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 16px;
+  background: #171717;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.confirm-button:hover {
+  opacity: 0.92;
+}
+
+.confirm-button:disabled {
+  background: #d5d5d5;
+  color: #999999;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+  border: 1px solid #e2e2e2;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #666666;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  background: #f8f8f8;
+  color: #171717;
+}
+
+/* Loading fallback */
+
+.review-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  font-size: 13px;
+  color: #888888;
+}
+
+/* Responsive adjustments */
+
+@media (max-width: 360px) {
+  .amount-hero-value {
+    font-size: 30px;
+  }
+
+  .review-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .security-box {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+}

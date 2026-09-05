@@ -1,35 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { beneficiaries, INITIAL_OPERATIONAL_FUNDS } from "@/data/mockData";
 import "./send.css";
 
-const beneficiaries = [
-  {
-    id: 1,
-    name: "Rahul",
-    account: "•••• 4821",
-    initials: "R",
-  },
-  {
-    id: 2,
-    name: "Ananya",
-    account: "•••• 1937",
-    initials: "A",
-  },
-  {
-    id: 3,
-    name: "Arjun",
-    account: "•••• 7264",
-    initials: "A",
-  },
-];
-
 export default function SendMoney() {
+  const router = useRouter();
   const [selectedBeneficiary, setSelectedBeneficiary] =
     useState<number | null>(null);
 
   const [amount, setAmount] = useState("");
+  const [note, setNote] = useState("");
 
   const selected = beneficiaries.find(
     (beneficiary) =>
@@ -37,6 +20,18 @@ export default function SendMoney() {
   );
 
   const numericAmount = Number(amount);
+
+  const handleReview = () => {
+    if (!selectedBeneficiary || numericAmount <= 0 || numericAmount > INITIAL_OPERATIONAL_FUNDS) {
+      return;
+    }
+    const params = new URLSearchParams({
+      beneficiaryId: String(selectedBeneficiary),
+      amount: String(numericAmount),
+      ...(note.trim() ? { note: note.trim() } : {}),
+    });
+    router.push(`/send/review?${params.toString()}`);
+  };
 
   return (
     <main className="send-page">
@@ -55,7 +50,7 @@ export default function SendMoney() {
         <section className="available-balance">
           <p>Available for spending</p>
 
-          <h2>₹20,000</h2>
+          <h2>₹{INITIAL_OPERATIONAL_FUNDS.toLocaleString("en-IN")}</h2>
 
           <span>
             Your protected reserve is not available
@@ -133,7 +128,7 @@ export default function SendMoney() {
 
           <div className="amount-info">
             <span>Available</span>
-            <span>₹20,000</span>
+            <span>₹{INITIAL_OPERATIONAL_FUNDS.toLocaleString("en-IN")}</span>
           </div>
         </section>
 
@@ -146,6 +141,8 @@ export default function SendMoney() {
             id="note"
             className="note-input"
             placeholder="What's this for?"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
           />
         </section>
 
@@ -178,8 +175,9 @@ export default function SendMoney() {
             disabled={
               !selectedBeneficiary ||
               numericAmount <= 0 ||
-              numericAmount > 20000
+              numericAmount > INITIAL_OPERATIONAL_FUNDS
             }
+            onClick={handleReview}
           >
             Review Transaction
           </button>
