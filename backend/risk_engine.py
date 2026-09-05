@@ -1,7 +1,7 @@
 import hashlib
 import uuid
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -180,3 +180,130 @@ def get_user_status(user_id: str):
       "protected_reserve": user["protected_reserve"],
       "status": "SECURE",
   }
+
+
+# --- PERSON 3 HARDWARE AUTHORIZATION BRIDGE ---
+
+import os
+import sys
+
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if ROOT_DIR not in sys.path:
+  sys.path.insert(0, ROOT_DIR)
+
+from src.hardware_auth import (
+    RiskLevel,
+    RiskDecision,
+    TransactionPayload,
+    HardwareClient,
+    SignatureVerifier,
+    HardwareAuthorizationService,
+    AuthorizationStatus,
+)
+
+HARDWARE_URL = os.getenv("RECLAIM_HARDWARE_URL", "http://127.0.0.1:8585")
+hardware_client = HardwareClient(endpoint_url=HARDWARE_URL)
+signature_verifier = SignatureVerifier()
+
+
+def on_person4_freeze_alert(tx: TransactionPayload, ver_res):
+  print(
+      f"\n[PERSON 4 ALERT - FREEZE TRIGGERED] User '{tx.sender}' frozen due to"
+      " 3 failed attempts!"
+  )
+  user = USER_DATABASE.get(tx.sender)
+  if user:
+    user["status"] = "FROZEN"
+
+
+hardware_service = HardwareAuthorizationService(
+    hardware_client=hardware_client,
+    signature_verifier=signature_verifier,
+    person4_compromise_handler=on_person4_freeze_alert,
+    max_allowed_failed_attempts=3,
+)
+
+
+class HardwareAuthorizeRequest(BaseModel):
+  transaction_id: str
+  amount: float
+  recipient: str
+  sender: str = "user_101"
+  risk_level: str = "CRITICAL"
+  risk_score: float = 0.75
+  timestamp: Optional[str] = None
+  nonce: Optional[str] = None
+  risk_decision: str = "TRIGGER_RECLAIM"
+  risk_factors: List[str] = []
+  challenge_id: str
+  challenge_payload: str
+
+
+class HardwareAuthorizeResponse(BaseModel):
+  is_valid: bool
+  status: str
+  reason: str
+  failed_attempts_count: int = 0
+  details: Dict[str, Any] = {}
+  error: Optional[str] = None
+
+
+@app.get("/api/v1/hardware/status")
+def get_hardware_status():
+  return hardware_client.get_device_status()
+
+
+@app.post(
+    "/api/v1/hardware/authorize", response_model=HardwareAuthorizeResponse
+)
+def authorize_hardware_transaction(req: HardwareAuthorizeRequest):
+  # 1. Verify hardware device connectivity
+  dev_status = hardware_client.get_device_status()
+  if dev_status.get("online") is False:
+    return HardwareAuthorizeResponse(
+        is_valid=False,
+        status="UNAVAILABLE",
+        reason="Security authorization unavailable. Please try again.",
+        failed_attempts_count=hardware_service.get_failed_attempts(req.sender),
+        error=dev_status.get("error", "Hardware device unreachable"),
+        details={"step": "HARDWARE_CONNECTIVITY"},
+    )
+
+  # Auto-register device public key if known
+  pubkey = dev_status.get("public_key")
+  if pubkey and pubkey not in signature_verifier.allowed_public_keys:
+    signature_verifier.register_trusted_device_key(pubkey)
+
+  # 2. Build TransactionPayload using Person 3's exact domain model
+  risk_level_enum = RiskLevel.CRITICAL
+  if req.risk_level in RiskLevel.__members__:
+    risk_level_enum = RiskLevel(req.risk_level)
+
+  tx = TransactionPayload(
+      transaction_id=req.transaction_id,
+      amount=req.amount,
+      recipient=req.recipient,
+      sender=req.sender,
+      risk_level=risk_level_enum,
+      risk_score=req.risk_score,
+      timestamp=req.timestamp or datetime.utcnow().isoformat(),
+      nonce=req.nonce or f"nonce_{uuid.uuid4().hex[:12]}",
+      risk_decision=req.risk_decision,
+      risk_factors=req.risk_factors or ["protected_reserve_accessed"],
+      challenge_id=req.challenge_id,
+      challenge_payload=req.challenge_payload,
+  )
+
+  # 3. Process authorization via Person 3's HardwareAuthorizationService
+  res = hardware_service.process_transaction_authorization(tx)
+
+  return HardwareAuthorizeResponse(
+      is_valid=res.is_valid,
+      status=(
+          res.status.value if hasattr(res.status, "value") else str(res.status)
+      ),
+      reason=res.reason,
+      failed_attempts_count=res.failed_attempts_count,
+      details=res.details,
+  )
+

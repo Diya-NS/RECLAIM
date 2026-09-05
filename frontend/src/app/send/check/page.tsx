@@ -61,6 +61,8 @@ function CheckContent() {
         decision: evaluation.decision,
         risk_factors: JSON.stringify(evaluation.risk_factors),
         breakdown: JSON.stringify(evaluation.breakdown),
+        ...(evaluation.challenge_id ? { challenge_id: evaluation.challenge_id } : {}),
+        ...(evaluation.challenge_payload ? { challenge_payload: evaluation.challenge_payload } : {}),
       });
 
       router.push(`/send/risk?${params.toString()}`);
