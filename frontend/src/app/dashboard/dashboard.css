@@ -1,0 +1,329 @@
+.dashboard-page {
+  min-height: 100vh;
+  background: #f4f5f7;
+  color: #171717;
+}
+
+.dashboard-container {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: #ffffff;
+  padding-bottom: 90px;
+}
+
+/* Header */
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 20px 0;
+}
+
+.greeting {
+  margin-bottom: 4px;
+  color: #8a8a8a;
+  font-size: 13px;
+}
+
+.dashboard-header h1 {
+  font-size: 21px;
+  font-weight: 650;
+  letter-spacing: -0.4px;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #f1f1f1;
+
+  font-size: 17px;
+}
+
+/* Balance */
+
+.balance-section {
+  padding: 34px 20px 0;
+}
+
+.section-label {
+  color: #858585;
+  font-size: 13px;
+}
+
+.total-balance {
+  margin-top: 5px;
+
+  font-size: 38px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+}
+
+/* Funds */
+
+.funds-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  padding: 24px 20px 0;
+}
+
+.fund-card {
+  padding: 16px;
+  border-radius: 18px;
+}
+
+.fund-card.operational {
+  background: #f1f2f4;
+}
+
+.fund-card.protected {
+  background: #171717;
+  color: #ffffff;
+}
+
+.fund-label {
+  color: #777777;
+  font-size: 11px;
+}
+
+.protected .fund-label {
+  color: #aaaaaa;
+}
+
+.fund-card h3 {
+  margin-top: 10px;
+
+  font-size: 19px;
+  font-weight: 650;
+  letter-spacing: -0.4px;
+}
+
+.fund-description {
+  margin-top: 7px;
+
+  color: #8a8a8a;
+  font-size: 11px;
+}
+
+.protected .fund-description {
+  color: #999999;
+}
+
+.protected-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.protected-title span {
+  font-size: 13px;
+}
+
+/* Actions */
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  padding: 16px 20px 0;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  height: 52px;
+
+  border-radius: 16px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  text-decoration: none;
+}
+
+.action-button.primary {
+  background: #171717;
+  color: #ffffff;
+}
+
+.action-button.secondary {
+  border: 1px solid #e2e2e2;
+  background: #ffffff;
+  color: #171717;
+}
+
+.action-icon {
+  font-size: 18px;
+}
+
+/* Transactions */
+
+.transactions-section {
+  padding: 34px 20px 0;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 12px;
+}
+
+.section-header h2 {
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.section-header a {
+  color: #777777;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.transaction {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 12px 2px;
+}
+
+.transaction-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.transaction-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  border-radius: 50%;
+
+  background: #f1f1f1;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.transaction-name {
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.transaction-info {
+  margin-top: 4px;
+
+  color: #888888;
+  font-size: 11px;
+}
+
+.transaction-amount {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.transaction-amount.received {
+  color: #16803c;
+}
+
+/* Bottom Navigation */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  z-index: 10;
+
+  display: flex;
+  justify-content: space-around;
+
+  width: 100%;
+  max-width: 430px;
+
+  padding: 10px 8px 12px;
+
+  transform: translateX(-50%);
+
+  border-top: 1px solid #eeeeee;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  backdrop-filter: blur(12px);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+
+  border: none;
+  background: none;
+
+  color: #888888;
+
+  font-size: 10px;
+
+  text-decoration: none;
+}
+
+.nav-item span {
+  font-size: 18px;
+}
+
+.nav-item.active {
+  color: #171717;
+  font-weight: 600;
+}
+
+/* Desktop */
+
+@media (min-width: 431px) {
+  .dashboard-container {
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* Small phones */
+
+@media (max-width: 360px) {
+  .total-balance {
+    font-size: 32px;
+  }
+
+  .fund-card {
+    padding: 14px;
+  }
+
+  .fund-card h3 {
+    font-size: 17px;
+  }
+}
