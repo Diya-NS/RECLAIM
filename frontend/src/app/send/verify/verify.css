@@ -226,6 +226,158 @@
   color: #171717;
 }
 
+.verify-loading-card {
+  margin: 0 20px 16px;
+  background: #fafafa;
+  border: 1px solid #eeeeee;
+  border-radius: 18px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.verify-spinner {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid rgba(23, 23, 23, 0.08);
+  border-top-color: #171717;
+  animation: verifySpin 1s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  margin-bottom: 14px;
+}
+
+@keyframes verifySpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.verify-loading-text {
+  font-size: 15px;
+  font-weight: 650;
+  color: #171717;
+  margin-bottom: 4px;
+}
+
+.verify-loading-subtext {
+  font-size: 12px;
+  color: #777777;
+}
+
+/* Hardware Result Cards */
+
+.hardware-result-card {
+  margin: 0 20px 16px;
+  border-radius: 18px;
+  padding: 18px 20px;
+}
+
+.hardware-result-card.approved {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.hardware-result-card.blocked {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+.hardware-result-card.frozen {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+}
+
+.hardware-result-card.unavailable {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.result-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.result-header-icon {
+  font-size: 20px;
+}
+
+.result-header-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.approved .result-header-title {
+  color: #166534;
+}
+
+.blocked .result-header-title {
+  color: #92400e;
+}
+
+.frozen .result-header-title {
+  color: #991b1b;
+}
+
+.unavailable .result-header-title {
+  color: #334155;
+}
+
+.result-body-text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+.strike-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.strike-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #78350f;
+  margin-right: 4px;
+}
+
+.strike-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e5e7eb;
+}
+
+.strike-dot.active {
+  background: #dc2626;
+}
+
+.crypto-proof-block {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(22, 101, 52, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  color: #15803d;
+  font-family: monospace;
+}
+
+.crypto-proof-item {
+  display: flex;
+  justify-content: space-between;
+  word-break: break-all;
+}
+
 .verify-loading {
   display: flex;
   align-items: center;

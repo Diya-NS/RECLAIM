@@ -27,6 +27,8 @@ function RiskContent() {
   const riskScoreParam = searchParams.get("risk_score");
   const decisionParam = searchParams.get("decision") as RiskDecision | null;
   const riskFactorsParam = searchParams.get("risk_factors");
+  const challengeIdParam = searchParams.get("challenge_id");
+  const challengePayloadParam = searchParams.get("challenge_payload");
 
   const numericAmount = Number(amountParam) > 0 ? Number(amountParam) : 2000;
   const formattedAmount = `₹${numericAmount.toLocaleString("en-IN")}`;
@@ -60,6 +62,9 @@ function RiskContent() {
     ...(transactionIdParam ? { transactionId: transactionIdParam } : {}),
     ...(timestampParam ? { timestamp: timestampParam } : {}),
     ...(noteParam ? { note: noteParam } : {}),
+    ...(challengeIdParam ? { challenge_id: challengeIdParam } : {}),
+    ...(challengePayloadParam ? { challenge_payload: challengePayloadParam } : {}),
+    ...(riskFactors.length ? { risk_factors: JSON.stringify(riskFactors) } : {}),
   });
 
   const handleContinue = () => {

@@ -18,8 +18,8 @@
 // =========================================================================
 // CONFIGURATION: Set your Wi-Fi details here
 // =========================================================================
-const char* ssid     = "YOUR_WIFI_SSID";
-const char* password = "YOUR_WIFI_PASSWORD";
+const char* ssid     = "csseminarhal2.4l";
+const char* password = "sctce2020";
 
 #define LED_PIN 2 // Onboard LED on ESP32 WROOM-DA Module (GPIO 2)
 
