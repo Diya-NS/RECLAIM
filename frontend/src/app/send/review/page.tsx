@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import {
   beneficiaries,
@@ -13,10 +13,10 @@ import { TransactionPayload } from "@/types/transaction";
 import "./review.css";
 
 function ReviewContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [isChecking, setIsChecking] = useState(false);
-  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const beneficiaryIdParam = searchParams.get("beneficiaryId");
   const amountParam = searchParams.get("amount");
@@ -35,7 +35,7 @@ function ReviewContent() {
   );
 
   const handleConfirmAndSend = async () => {
-    if (isChecking || isConfirmed) return;
+    if (isChecking) return;
 
     setIsChecking(true);
 
@@ -55,12 +55,17 @@ function ReviewContent() {
     };
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 600));
       await handoffToRiskEngine(transaction);
-      setIsConfirmed(true);
+      const params = new URLSearchParams({
+        amount: String(numericAmount),
+        recipient: beneficiary.name,
+        recipientAccount: beneficiary.account,
+        beneficiaryId: String(beneficiary.id),
+        ...(noteText ? { note: noteText } : {}),
+      });
+      router.push(`/send/check?${params.toString()}`);
     } catch (error) {
       console.error("Risk engine handoff failed:", error);
-    } finally {
       setIsChecking(false);
     }
   };
@@ -143,13 +148,9 @@ function ReviewContent() {
           <button
             className="confirm-button"
             onClick={handleConfirmAndSend}
-            disabled={isChecking || isConfirmed}
+            disabled={isChecking}
           >
-            {isChecking
-              ? "Checking..."
-              : isConfirmed
-              ? "Confirmed"
-              : "Confirm & Send"}
+            {isChecking ? "Checking transaction..." : "Confirm & Send"}
           </button>
 
           <Link href="/send" className="cancel-button">
