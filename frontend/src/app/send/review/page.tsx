@@ -8,8 +8,6 @@ import {
   INITIAL_OPERATIONAL_FUNDS,
   PROTECTED_RESERVE,
 } from "@/data/mockData";
-import { handoffToRiskEngine } from "@/lib/riskEngineHandoff";
-import { TransactionPayload } from "@/types/transaction";
 import "./review.css";
 
 function ReviewContent() {
@@ -45,29 +43,17 @@ function ReviewContent() {
       .toUpperCase()}`;
     const timestamp = new Date().toISOString();
 
-    const transaction: TransactionPayload = {
-      amount: numericAmount,
+    const params = new URLSearchParams({
+      amount: String(numericAmount),
       recipient: beneficiary.name,
       recipientAccount: beneficiary.account,
-      note: noteText,
-      timestamp,
+      beneficiaryId: String(beneficiary.id),
       transactionId,
-    };
+      timestamp,
+      ...(noteText ? { note: noteText } : {}),
+    });
 
-    try {
-      await handoffToRiskEngine(transaction);
-      const params = new URLSearchParams({
-        amount: String(numericAmount),
-        recipient: beneficiary.name,
-        recipientAccount: beneficiary.account,
-        beneficiaryId: String(beneficiary.id),
-        ...(noteText ? { note: noteText } : {}),
-      });
-      router.push(`/send/check?${params.toString()}`);
-    } catch (error) {
-      console.error("Risk engine handoff failed:", error);
-      setIsChecking(false);
-    }
+    router.push(`/send/check?${params.toString()}`);
   };
 
   return (
