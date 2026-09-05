@@ -1,15 +1,13 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import { beneficiaries } from "@/data/mockData";
 import "./check.css";
 
 function CheckContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  const [isComplete, setIsComplete] = useState(false);
 
   const amountParam = searchParams.get("amount");
   const recipientParam = searchParams.get("recipient");
@@ -27,49 +25,36 @@ function CheckContent() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsComplete(true);
-    }, 2200);
+      const params = new URLSearchParams({
+        amount: String(numericAmount),
+        recipient,
+        recipientAccount,
+        beneficiaryId: String(fallbackBeneficiary.id),
+        ...(searchParams.get("note") ? { note: searchParams.get("note")! } : {}),
+      });
+      router.push(`/send/risk?${params.toString()}`);
+    }, 1800);
 
     return () => clearTimeout(timer);
-  }, []);
-
-  const handleContinue = () => {
-    router.push("/dashboard");
-  };
+  }, [numericAmount, recipient, recipientAccount, fallbackBeneficiary.id, searchParams, router]);
 
   return (
     <main className="check-page">
       <div className="check-container">
         <section className="security-hero">
           <div className="animation-container">
-            {!isComplete && (
-              <>
-                <div className="pulse-ring" />
-                <div className="pulse-ring-second" />
-                <div className="spinner-arc" />
-              </>
-            )}
-            <div
-              className={`status-icon-circle ${isComplete ? "complete" : ""}`}
-            >
-              {isComplete ? (
-                <span className="check-mark">✓</span>
-              ) : (
-                <span>..</span>
-              )}
+            <div className="pulse-ring" />
+            <div className="pulse-ring-second" />
+            <div className="spinner-arc" />
+            <div className="status-icon-circle">
+              <span>..</span>
             </div>
           </div>
 
-          <h1 className="check-title">
-            {isComplete
-              ? "Transaction check complete"
-              : "Checking your transaction"}
-          </h1>
+          <h1 className="check-title">Checking your transaction...</h1>
 
           <p className="check-subtitle">
-            {isComplete
-              ? "Your transaction has been verified and is ready to proceed."
-              : "We're making sure this transaction is safe before it goes through."}
+            We're making sure this transaction is safe before it goes through.
           </p>
         </section>
 
@@ -98,15 +83,9 @@ function CheckContent() {
         <div className="check-spacer" />
 
         <div className="check-bottom-area">
-          {isComplete ? (
-            <button className="continue-button" onClick={handleContinue}>
-              Continue
-            </button>
-          ) : (
-            <div className="security-badge-footer">
-              <span>RECLAIM Transaction Verification</span>
-            </div>
-          )}
+          <div className="security-badge-footer">
+            <span>RECLAIM Transaction Verification</span>
+          </div>
         </div>
       </div>
     </main>

@@ -22,7 +22,7 @@ export default function SendMoney() {
   const numericAmount = Number(amount);
 
   const handleReview = () => {
-    if (!selectedBeneficiary || numericAmount <= 0 || numericAmount > INITIAL_OPERATIONAL_FUNDS) {
+    if (!selectedBeneficiary || !amount.trim() || numericAmount <= 0) {
       return;
     }
     const params = new URLSearchParams({
@@ -174,8 +174,8 @@ export default function SendMoney() {
             className="continue-button"
             disabled={
               !selectedBeneficiary ||
-              numericAmount <= 0 ||
-              numericAmount > INITIAL_OPERATIONAL_FUNDS
+              !amount.trim() ||
+              numericAmount <= 0
             }
             onClick={handleReview}
           >
