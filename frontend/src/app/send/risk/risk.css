@@ -1,0 +1,409 @@
+.risk-page {
+  min-height: 100vh;
+  background: #f4f5f7;
+  color: #171717;
+}
+
+.risk-container {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: #ffffff;
+  padding-bottom: 120px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Header */
+
+.risk-top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.risk-top-header h1 {
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.3px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f1f1f1;
+  font-size: 20px;
+  text-decoration: none;
+  color: #171717;
+}
+
+.header-spacer {
+  width: 38px;
+}
+
+/* State Switcher (For testing both High and Low risk states) */
+
+.state-switcher {
+  display: flex;
+  margin: 0 20px 16px;
+  padding: 3px;
+  background: #f1f2f4;
+  border-radius: 12px;
+  gap: 4px;
+}
+
+.switcher-tab {
+  flex: 1;
+  padding: 6px 12px;
+  border: none;
+  background: none;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #777777;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.switcher-tab.active {
+  background: #ffffff;
+  color: #171717;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Hero Status Banner */
+
+.risk-hero-section {
+  padding: 4px 20px 18px;
+  text-align: left;
+}
+
+.security-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.security-badge.high {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fee2e2;
+}
+
+.security-badge.low {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.risk-title {
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.6px;
+  color: #171717;
+}
+
+.risk-subtitle {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #666666;
+  line-height: 1.45;
+}
+
+/* Transaction Card */
+
+.risk-section {
+  padding: 0 20px 16px;
+}
+
+.tx-review-card {
+  background: #fafafa;
+  border: 1px solid #eeeeee;
+  border-radius: 18px;
+  padding: 16px 18px;
+}
+
+.tx-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.tx-row-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 4px;
+}
+
+.tx-row-amount {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #171717;
+}
+
+.tx-row-name {
+  font-size: 14px;
+  font-weight: 650;
+  color: #171717;
+}
+
+.tx-row-account {
+  font-family: monospace;
+  font-size: 12px;
+  color: #666666;
+  margin-top: 2px;
+}
+
+.tx-divider {
+  height: 1px;
+  background: #eeeeee;
+  margin: 12px 0;
+}
+
+/* Indicators Card */
+
+.indicators-card {
+  background: #fffbf5;
+  border: 1px solid #fed7aa;
+  border-radius: 18px;
+  padding: 16px 18px;
+}
+
+.indicators-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #c2410c;
+  margin-bottom: 10px;
+}
+
+.indicators-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.indicator-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: #431407;
+  line-height: 1.4;
+}
+
+.indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ea580c;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+/* Protected Money Section */
+
+.protection-guarantee-card {
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 18px;
+  padding: 16px 18px;
+}
+
+.protection-guarantee-title {
+  font-size: 14px;
+  font-weight: 650;
+  color: #171717;
+  margin-bottom: 12px;
+}
+
+.funds-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fund-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.fund-item-label {
+  color: #666666;
+}
+
+.fund-item-amount {
+  font-weight: 650;
+  color: #171717;
+}
+
+.fund-item.protected-row .fund-item-label {
+  font-weight: 600;
+  color: #171717;
+}
+
+.fund-item.protected-row .fund-item-amount {
+  color: #171717;
+}
+
+/* Prominent RECLAIM Protection Card */
+
+.reclaim-protection-card {
+  background: #171717;
+  color: #ffffff;
+  border-radius: 18px;
+  padding: 20px 18px;
+}
+
+.reclaim-protection-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  margin-bottom: 8px;
+}
+
+.reclaim-protection-card p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #cccccc;
+}
+
+/* Low Risk Normal Card */
+
+.low-risk-verified-card {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.low-risk-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 650;
+  color: #166534;
+  margin-bottom: 6px;
+}
+
+.low-risk-verified-card p {
+  font-size: 12px;
+  color: #15803d;
+  line-height: 1.45;
+}
+
+/* Bottom Action Bar */
+
+.risk-bottom-action {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  z-index: 10;
+  width: 100%;
+  max-width: 430px;
+  padding: 12px 20px 20px;
+  transform: translateX(-50%);
+  border-top: 1px solid #eeeeee;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.primary-action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 16px;
+  background: #171717;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.primary-action-button:hover {
+  opacity: 0.92;
+}
+
+.secondary-action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+  border: 1px solid #e2e2e2;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #666666;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.secondary-action-button:hover {
+  background: #f8f8f8;
+  color: #171717;
+}
+
+/* Loading Fallback */
+
+.risk-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  font-size: 13px;
+  color: #888888;
+}
+
+@media (max-width: 360px) {
+  .risk-title {
+    font-size: 20px;
+  }
+
+  .risk-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .risk-hero-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

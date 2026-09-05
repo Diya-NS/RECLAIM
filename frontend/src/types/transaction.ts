@@ -25,3 +25,12 @@ export interface TransactionRecord {
   note?: string;
 }
 
+export type RiskLevel = "LOW" | "HIGH";
+
+export interface RiskResult {
+  riskScore: number;
+  riskLevel: RiskLevel;
+  indicators?: string[];
+}
+
+
