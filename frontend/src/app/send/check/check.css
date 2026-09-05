@@ -93,6 +93,77 @@
   animation: popScale 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+.status-icon-circle.error {
+  background: #dc2626;
+  animation: popScale 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.check-error-box {
+  margin-top: 16px;
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 16px;
+  padding: 14px 18px;
+  text-align: center;
+}
+
+.check-error-title {
+  font-size: 14px;
+  font-weight: 650;
+  color: #991b1b;
+  margin-bottom: 4px;
+}
+
+.check-error-msg {
+  font-size: 12px;
+  color: #b91c1c;
+}
+
+.check-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.retry-button {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 16px;
+  background: #171717;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.retry-button:hover {
+  opacity: 0.92;
+}
+
+.back-link-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+  border: 1px solid #e2e2e2;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #666666;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.back-link-button:hover {
+  background: #f8f8f8;
+  color: #171717;
+}
+
 .check-mark {
   font-size: 28px;
   font-weight: 700;

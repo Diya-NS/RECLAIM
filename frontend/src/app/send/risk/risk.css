@@ -95,16 +95,69 @@
   margin-bottom: 10px;
 }
 
-.security-badge.high {
+.security-badge.high,
+.security-badge.reclaim {
   background: #fef2f2;
   color: #b91c1c;
   border: 1px solid #fee2e2;
 }
 
-.security-badge.low {
+.security-badge.step_up {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.security-badge.low,
+.security-badge.approve {
   background: #f0fdf4;
   color: #15803d;
   border: 1px solid #bbf7d0;
+}
+
+.score-pill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #e5e7eb;
+}
+
+.score-pill-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.score-pill.low {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.score-pill.medium {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.score-pill.high {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fee2e2;
 }
 
 .risk-title {
