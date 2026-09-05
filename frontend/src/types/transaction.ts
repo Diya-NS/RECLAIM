@@ -13,3 +13,15 @@ export interface TransactionPayload {
   timestamp: string;
   transactionId: string;
 }
+
+export interface TransactionRecord {
+  id: string;
+  name: string;
+  type: "Sent" | "Payment" | "Received";
+  amount: number;
+  date: string;
+  status: string;
+  account?: string;
+  note?: string;
+}
+
