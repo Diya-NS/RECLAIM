@@ -257,12 +257,20 @@ void handleAuthorize() {
 
   // Rapid blink LED while waiting
   if (!isAuthorizedArmed && !isForcedFailureArmed) {
+    Serial.println("[ESP32 HARDWARE] Waiting up to 20s for user input ('y' to approve, 'n' to reject)...");
     unsigned long startWait = millis();
-    while (millis() - startWait < 5000) {
+    int lastSec = -1;
+    while (millis() - startWait < 20000) {
       digitalWrite(LED_PIN, (millis() / 150) % 2 == 0 ? HIGH : LOW);
       checkSerialMonitorInput();
       server.handleClient();
       if (isAuthorizedArmed || isForcedFailureArmed) break;
+
+      int remSec = (20000 - (millis() - startWait)) / 1000;
+      if (remSec != lastSec && remSec % 5 == 0 && remSec > 0) {
+        Serial.printf("[ESP32 HARDWARE] ... %d seconds remaining to enter 'y' or 'n' ...\n", remSec);
+        lastSec = remSec;
+      }
       delay(20);
     }
     digitalWrite(LED_PIN, LOW);
