@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState, useCallback } from "react";
+import { Suspense, useEffect, useState, useCallback, useMemo, useRef } from "react";
 import {
   authorizeHardwareTransaction,
   HardwareAuthorizeResponse,
 } from "@/lib/riskEngine";
 import "./verify.css";
+
+const DEFAULT_BASE_URL = "http://localhost:8000";
 
 function VerifyContent() {
   const searchParams = useSearchParams();
@@ -17,20 +19,33 @@ function VerifyContent() {
   const recipientAccountParam = searchParams.get("recipientAccount") || "";
   const decision = searchParams.get("decision") || "APPROVE";
   const riskScore = searchParams.get("risk_score") || "0";
-  const transactionId = searchParams.get("transactionId") || `TXN-${Date.now()}`;
-  const timestamp = searchParams.get("timestamp") || new Date().toISOString();
+
+  // Stable IDs across re-renders
+  const [transactionId] = useState(
+    () =>
+      searchParams.get("transactionId") ||
+      `TXN-${Date.now().toString(36).toUpperCase()}-${Math.random()
+        .toString(36)
+        .substring(2, 7)
+        .toUpperCase()}`
+  );
+  const [timestamp] = useState(
+    () => searchParams.get("timestamp") || new Date().toISOString()
+  );
+
   const challengeId = searchParams.get("challenge_id") || "CHAL-DEFAULT";
   const challengePayload = searchParams.get("challenge_payload") || "payload_default";
   const riskFactorsParam = searchParams.get("risk_factors");
 
-  let riskFactors: string[] = [];
-  if (riskFactorsParam) {
+  // Memoize parsed risk factors so reference does not change on every render
+  const riskFactors = useMemo(() => {
+    if (!riskFactorsParam) return [];
     try {
-      riskFactors = JSON.parse(riskFactorsParam);
+      return JSON.parse(riskFactorsParam);
     } catch {
-      riskFactors = [];
+      return [];
     }
-  }
+  }, [riskFactorsParam]);
 
   const numericAmount = Number(amountParam) > 0 ? Number(amountParam) : 2000;
   const formattedAmount = `₹${numericAmount.toLocaleString("en-IN")}`;
@@ -44,6 +59,10 @@ function VerifyContent() {
   const [hardwareResult, setHardwareResult] =
     useState<HardwareAuthorizeResponse | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [isResetting, setIsResetting] = useState(false);
+
+  // Execution guard: prevents re-running automatically on re-renders
+  const hasTriggeredRef = useRef(false);
 
   const runHardwareAuthorization = useCallback(async () => {
     if (!isReclaim) return;
@@ -52,6 +71,8 @@ function VerifyContent() {
     setAuthError(null);
 
     const startTime = Date.now();
+    // Generate fresh unique nonce per authorization attempt to prevent replay errors
+    const freshNonce = `nonce_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
     try {
       const res = await authorizeHardwareTransaction({
@@ -62,6 +83,7 @@ function VerifyContent() {
         risk_level: "CRITICAL",
         risk_score: Number(riskScore) / 100,
         timestamp,
+        nonce: freshNonce,
         risk_decision: "TRIGGER_RECLAIM",
         risk_factors: riskFactors,
         challenge_id: challengeId,
@@ -92,11 +114,38 @@ function VerifyContent() {
     challengePayload,
   ]);
 
+  // Trigger ONCE on mount for TRIGGER_RECLAIM transactions
   useEffect(() => {
-    if (isReclaim) {
+    if (isReclaim && !hasTriggeredRef.current) {
+      hasTriggeredRef.current = true;
       runHardwareAuthorization();
     }
   }, [isReclaim, runHardwareAuthorization]);
+
+  const handleTryAgain = () => {
+    runHardwareAuthorization();
+  };
+
+  const handleResetFreezeMode = async () => {
+    setIsResetting(true);
+    try {
+      const baseUrl =
+        process.env.NEXT_PUBLIC_RISK_ENGINE_URL || DEFAULT_BASE_URL;
+      await fetch(`${baseUrl}/api/v1/hardware/reset`, { method: "POST" });
+      setHardwareResult(null);
+      setAuthError(null);
+      runHardwareAuthorization();
+    } catch (e) {
+      console.error("Failed to reset hardware state:", e);
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  const isHardwareApproved = hardwareResult?.status === "APPROVED";
+  const isHardwareBlocked = hardwareResult?.status === "BLOCKED";
+  const isHardwareFrozen = hardwareResult?.status === "FREEZE_MODE_TRIGGERED";
+  const isHardwareUnavailable = hardwareResult?.status === "UNAVAILABLE";
 
   return (
     <main className="verify-page">
@@ -106,7 +155,9 @@ function VerifyContent() {
             ←
           </Link>
           <h1>
-            {isApproved
+            {isHardwareApproved
+              ? "Authorization Approved"
+              : isApproved
               ? "Authorization"
               : isStepUp
               ? "Verification"
@@ -116,26 +167,77 @@ function VerifyContent() {
         </header>
 
         <section className="verify-hero">
+          {/* Visual Status Badge */}
           <div
             className={`verify-badge ${
-              isApproved ? "approve" : isStepUp ? "step_up" : "reclaim"
+              isHardwareApproved
+                ? "approve"
+                : isHardwareBlocked
+                ? "step_up"
+                : isHardwareFrozen
+                ? "reclaim"
+                : isApproved
+                ? "approve"
+                : isStepUp
+                ? "step_up"
+                : "reclaim"
             }`}
           >
+            <span>
+              {isHardwareApproved
+                ? "✓"
+                : isHardwareBlocked
+                ? "⚠️"
+                : isHardwareFrozen
+                ? "🔒"
+                : isApproved
+                ? "✓"
+                : isStepUp
+                ? "⚠️"
+                : "🛡️"}
+            </span>
+            <span>
+              {isHardwareApproved
+                ? "Hardware Authorized"
+                : isHardwareBlocked
+                ? "Authorization Blocked"
+                : isHardwareFrozen
+                ? "Security Freeze Active"
+                : isAuthorizing
+                ? "Awaiting ESP32 Hardware Approval"
+                : isApproved
+                ? "Standard Approved"
+                : isStepUp
+                ? "Verification Required"
+                : "RECLAIM Security Protocol"}
+            </span>
           </div>
 
           <h2 className="verify-title">
-            {isApproved && "Transaction Authorization"}
-            {isStepUp && "Enhanced Verification Required"}
-            {isReclaim && "RECLAIM Security Protocol"}
+            {isHardwareApproved && "Transfer Successfully Authorized"}
+            {isHardwareBlocked && "Hardware Authorization Blocked"}
+            {isHardwareFrozen && "Security Freeze Active"}
+            {!hardwareResult && isApproved && "Transaction Authorization"}
+            {!hardwareResult && isStepUp && "Enhanced Verification Required"}
+            {!hardwareResult && isReclaim && "RECLAIM Hardware Security"}
           </h2>
 
           <p className="verify-subtitle">
-            {isApproved &&
-              "Your transaction passed security evaluation. Final authorization will be performed here."}
-            {isStepUp &&
-              "Elevated factors were detected. Step-up authorization will be performed here."}
-            {isReclaim &&
-              "High-risk transfer detected. Hardware-backed security proof is required before funds can proceed."}
+            {isHardwareApproved &&
+              "Cryptographic proof verified by your ESP32 hardware security enclave. Biometric presence and liveness confirmed."}
+            {isHardwareBlocked &&
+              "Hardware authorization was rejected or timed out. Your protected funds remain safe in your reserve."}
+            {isHardwareFrozen &&
+              "3 failed hardware authorization attempts exceeded. Security protection has locked this account to protect all reserves."}
+            {!hardwareResult &&
+              isApproved &&
+              "Your transaction passed standard security evaluation. Final authorization will be performed here."}
+            {!hardwareResult &&
+              isStepUp &&
+              "Elevated risk factors were detected. Step-up authorization will be performed here."}
+            {!hardwareResult &&
+              isReclaim &&
+              "High-risk transfer detected. Cryptographic signing on your ESP32 hardware enclave is required."}
           </p>
         </section>
 
@@ -159,12 +261,24 @@ function VerifyContent() {
           <div className="verify-divider" />
 
           <div className="verify-row">
-            <span className="verify-label">Security Score</span>
-            <span className="verify-status">{riskScore} / 100</span>
+            <span className="verify-label">Security Status</span>
+            <span
+              className={`verify-status ${
+                isHardwareApproved ? "approved" : ""
+              }`}
+            >
+              {isHardwareApproved
+                ? "✓ Cryptographically Verified & Released"
+                : isHardwareBlocked
+                ? "⛔ Authorization Blocked"
+                : isHardwareFrozen
+                ? "🔒 Account Frozen (Funds Preserved)"
+                : `Score: ${riskScore} / 100`}
+            </span>
           </div>
         </section>
 
-        {/* TRIGGER_RECLAIM: Real Hardware Authorization Results */}
+        {/* TRIGGER_RECLAIM: Real Hardware Authorization States */}
         {isReclaim && isAuthorizing && (
           <section className="verify-loading-card">
             <div className="verify-spinner" />
@@ -172,8 +286,21 @@ function VerifyContent() {
               Authorizing with security hardware...
             </p>
             <p className="verify-loading-subtext">
-              Verifying challenge {challengeId} with secure hardware enclave.
+              Verifying challenge <strong>{challengeId}</strong> with ESP32 hardware enclave.
             </p>
+
+            <div className="serial-monitor-hint-box">
+              <div className="hint-header">
+                <span className="hint-icon">💻</span>
+                <span className="hint-title">Action Required in Arduino Serial Monitor</span>
+              </div>
+              <p className="hint-code">
+                Type <strong>&apos;y&apos;</strong> + Enter &rarr; <span>APPROVE &amp; SIGN Challenge</span>
+              </p>
+              <p className="hint-alt">
+                Type <strong>&apos;n&apos;</strong> + Enter &rarr; <span>REJECT (Simulate Biometric Fail)</span>
+              </p>
+            </div>
           </section>
         )}
 
@@ -194,7 +321,7 @@ function VerifyContent() {
 
         {isReclaim && !isAuthorizing && hardwareResult && (
           <>
-            {hardwareResult.status === "APPROVED" && (
+            {isHardwareApproved && (
               <section className="hardware-result-card approved">
                 <div className="result-header-row">
                   <span className="result-header-icon">✓</span>
@@ -203,7 +330,7 @@ function VerifyContent() {
                   </span>
                 </div>
                 <p className="result-body-text">
-                  Cryptographic proof verified successfully by the hardware enclave.
+                  Cryptographic proof verified successfully by the ESP32 hardware enclave.
                   Biometric presence and physical liveness confirmed.
                 </p>
                 <div className="crypto-proof-block">
@@ -211,6 +338,14 @@ function VerifyContent() {
                     <span>Challenge ID:</span>
                     <strong>{challengeId}</strong>
                   </div>
+                  {hardwareResult.details?.challenge_signature && (
+                    <div className="crypto-proof-item">
+                      <span>Hardware Signature:</span>
+                      <span>
+                        {String(hardwareResult.details.challenge_signature).substring(0, 22)}...
+                      </span>
+                    </div>
+                  )}
                   {hardwareResult.details?.public_key && (
                     <div className="crypto-proof-item">
                       <span>Public Key:</span>
@@ -221,15 +356,23 @@ function VerifyContent() {
                   )}
                   {hardwareResult.details?.device_id && (
                     <div className="crypto-proof-item">
-                      <span>Device:</span>
+                      <span>Device ID:</span>
                       <span>{hardwareResult.details.device_id}</span>
                     </div>
                   )}
+                  <div className="crypto-proof-item">
+                    <span>Biometric Enclave Check:</span>
+                    <strong style={{ color: "#16a34a" }}>✓ Passed</strong>
+                  </div>
+                  <div className="crypto-proof-item">
+                    <span>Physical Liveness:</span>
+                    <strong style={{ color: "#16a34a" }}>✓ Confirmed</strong>
+                  </div>
                 </div>
               </section>
             )}
 
-            {hardwareResult.status === "BLOCKED" && (
+            {isHardwareBlocked && (
               <section className="hardware-result-card blocked">
                 <div className="result-header-row">
                   <span className="result-header-icon">⛔</span>
@@ -264,7 +407,7 @@ function VerifyContent() {
               </section>
             )}
 
-            {hardwareResult.status === "FREEZE_MODE_TRIGGERED" && (
+            {isHardwareFrozen && (
               <section className="hardware-result-card frozen">
                 <div className="result-header-row">
                   <span className="result-header-icon">🔒</span>
@@ -285,7 +428,7 @@ function VerifyContent() {
               </section>
             )}
 
-            {hardwareResult.status === "UNAVAILABLE" && (
+            {isHardwareUnavailable && (
               <section className="hardware-result-card unavailable">
                 <div className="result-header-row">
                   <span className="result-header-icon">⚠️</span>
@@ -320,21 +463,48 @@ function VerifyContent() {
         <div className="verify-spacer" />
 
         <div className="verify-actions">
-          {isReclaim && !isAuthorizing && (hardwareResult?.status === "BLOCKED" || authError || hardwareResult?.status === "UNAVAILABLE") && (
+          {/* Try Again on Blocked or Error */}
+          {isReclaim &&
+            !isAuthorizing &&
+            (isHardwareBlocked || authError || isHardwareUnavailable) && (
+              <button
+                className="verify-primary-button"
+                onClick={handleTryAgain}
+              >
+                Try Again
+              </button>
+            )}
+
+          {/* Reset button when account hit Freeze Mode during demo/testing */}
+          {isReclaim && !isAuthorizing && isHardwareFrozen && (
             <button
-              className="verify-primary-button"
-              onClick={runHardwareAuthorization}
+              className="verify-primary-button reset-button"
+              onClick={handleResetFreezeMode}
+              disabled={isResetting}
             >
-              Try Again
+              {isResetting ? "Resetting Security State..." : "Reset Freeze State (Demo)"}
             </button>
           )}
 
-          <Link href="/dashboard" className="verify-primary-button">
-            Return to Dashboard
-          </Link>
-          <Link href="/send" className="verify-secondary-button">
-            New Transfer
-          </Link>
+          {isHardwareApproved ? (
+            <>
+              <Link href="/dashboard" className="verify-primary-button">
+                Done (Return to Dashboard)
+              </Link>
+              <Link href="/transactions" className="verify-secondary-button">
+                View All Transactions
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/dashboard" className="verify-primary-button">
+                Return to Dashboard
+              </Link>
+              <Link href="/send" className="verify-secondary-button">
+                New Transfer
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </main>

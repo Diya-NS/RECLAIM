@@ -66,7 +66,7 @@ class HardwareClient:
         )
 
         try:
-            with urllib.request.urlopen(req, timeout=5) as resp:
+            with urllib.request.urlopen(req, timeout=25) as resp:
                 raw_res = json.loads(resp.read().decode("utf-8"))
                 return HardwareAuthResponse(
                     success=raw_res.get("success", False),

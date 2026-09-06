@@ -15,7 +15,7 @@ import hmac
 import json
 import os
 import sys
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
 import threading
 from typing import Dict, Any, Tuple
 
@@ -175,7 +175,7 @@ class ESP32HTTPRequestHandler(BaseHTTPRequestHandler):
 
 
 def run_simulator_server(host: str = "127.0.0.1", port: int = 8585, blocking: bool = True):
-    server = HTTPServer((host, port), ESP32HTTPRequestHandler)
+    server = ThreadingHTTPServer((host, port), ESP32HTTPRequestHandler)
     print(f"[ESP32 SIMULATOR] Server running at http://{host}:{port}")
     if blocking:
         try:

@@ -321,3 +321,19 @@ def authorize_hardware_transaction(req: HardwareAuthorizeRequest):
       details=res.details,
   )
 
+
+@app.post("/api/v1/hardware/reset")
+def reset_hardware_state():
+  hardware_service.reset_failed_attempts("user_101")
+  user = USER_DATABASE.get("user_101")
+  if user:
+    user["status"] = "SECURE"
+  signature_verifier.used_nonces.clear()
+  return {
+      "status": "RESET",
+      "user_id": "user_101",
+      "user_status": "SECURE",
+      "failed_attempts": hardware_service.get_failed_attempts("user_101"),
+  }
+
+
