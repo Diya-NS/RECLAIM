@@ -141,6 +141,23 @@ class TestHardwareAuthorizationFlow(unittest.TestCase):
         self.assertFalse(res2.is_valid)
         self.assertIn("Replay attack detected", res2.reason)
 
+    def test_sim_binding_payload_support(self):
+        tx_sim = TransactionPayload(
+            transaction_id="TX-SIM-001",
+            amount=12000.0,
+            recipient="family",
+            sender="alice",
+            sim_id="sim_icc_8991004821",
+            risk_level=RiskLevel.HIGH,
+            risk_score=0.75,
+            timestamp="2026-09-06T00:00:00Z",
+            nonce="nonce_sim_01",
+            risk_decision=RiskDecision.TRIGGER_RECLAIM.value,
+            risk_factors=["sim_mismatch", "amount_exceeded"],
+        )
+        self.assertEqual(tx_sim.sim_id, "sim_icc_8991004821")
+        self.assertIn("sim_mismatch", tx_sim.risk_factors)
+
 
 if __name__ == "__main__":
     unittest.main()

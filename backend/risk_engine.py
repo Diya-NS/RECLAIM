@@ -24,6 +24,7 @@ class TransactionContext(BaseModel):
   amount: float
   recipient_id: str
   device_id: str
+  sim_id: Optional[str] = "sim_icc_8991004821"
   ip_address: str = "127.0.0.1"
 
 
@@ -44,6 +45,7 @@ USER_DATABASE = {
         "protected_reserve": 180000.0,
         "known_devices": {"device_pixel8_abc", "macbook_chrome_xyz"},
         "known_recipients": {"mom_axis_001", "landlord_hdfc_002"},
+        "registered_sim_id": "sim_icc_8991004821",
         "trust_score": 85,
     }
 }
@@ -96,6 +98,18 @@ def evaluate_transaction(txn: TransactionContext):
     breakdown["device_risk"] = 20
   else:
     breakdown["device_risk"] = 0
+
+  # 4. SIM Binding Risk (Max 40 pts) - Device hardware SIM verification
+  reg_sim = user.get("registered_sim_id")
+  if not txn.sim_id or (reg_sim and txn.sim_id != reg_sim):
+    risk_score += 40
+    factors.append(
+        f"SIM Binding Mismatch: Active SIM '{txn.sim_id}' does not match"
+        f" registered SIM '{reg_sim}'"
+    )
+    breakdown["sim_risk"] = 40
+  else:
+    breakdown["sim_risk"] = 0
 
   # 4. Velocity Risk (Max 15 pts) - Rapid drain detection
   now = datetime.utcnow()
