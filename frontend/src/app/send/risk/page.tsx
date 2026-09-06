@@ -191,6 +191,15 @@ function RiskContent() {
                 Score: {riskScore} / 100
               </span>
             </div>
+
+            <div className="sim-binding-status-row" style={{ marginTop: "12px", paddingTop: "12px", borderTop: "1px dashed rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem" }}>
+              <span style={{ color: "#94a3b8", display: "flex", alignItems: "center", gap: "6px" }}>
+                <span>📱</span> SIM Binding Status
+              </span>
+              <span style={{ color: "#10b981", fontWeight: 600, background: "rgba(16, 185, 129, 0.1)", padding: "2px 8px", borderRadius: "12px", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
+                ✓ Verified (SIM-8991)
+              </span>
+            </div>
           </div>
         </section>
 

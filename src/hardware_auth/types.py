@@ -34,6 +34,7 @@ class TransactionPayload:
     risk_score: float
     timestamp: str
     nonce: str
+    sim_id: Optional[str] = "sim_icc_8991004821"
     risk_decision: str = RiskDecision.TRIGGER_RECLAIM.value
     risk_factors: List[str] = field(default_factory=lambda: ["protected_reserve_accessed", "amount_exceeded"])
     challenge_id: str = "CHAL-9F8A2B1C"
